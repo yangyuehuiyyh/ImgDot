@@ -1,0 +1,3 @@
+include ':libzdsdk'
+//project(':libzdsdk').projectDir = new File(settingsDir,'libzdsdk/android')
+include ':app'
