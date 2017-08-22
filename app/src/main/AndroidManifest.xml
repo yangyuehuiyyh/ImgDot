@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.punuo.sys.app.imgdot">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,7 +21,8 @@
         <activity android:name=".activity.FdomainActivity" />
         <activity android:name=".activity.GdomainActivity" />
         <activity android:name=".activity.HdomainActivity" />
-        <activity android:name=".activity.VideoPlayActivity"></activity>
+        <activity android:name=".activity.VideoPlayActivity" />
+        <activity android:name=".activity.RecordPlayActivity"></activity>
     </application>
 
 </manifest>
