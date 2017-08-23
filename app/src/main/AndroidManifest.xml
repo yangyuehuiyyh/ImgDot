@@ -22,7 +22,8 @@
         <activity android:name=".activity.GdomainActivity" />
         <activity android:name=".activity.HdomainActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
-        <activity android:name=".activity.RecordPlayActivity"></activity>
+        <activity android:name=".activity.RecordPlayActivity" />
+        <activity android:name=".activity.PlayRecordActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package biz.zhidu.zdsdk;
 
-public class RecordInfo {
+import java.io.Serializable;
+
+public class RecordInfo{
         public byte	Flag;
         public byte	Status;
         public int     BeginTime /*起始时间*/;

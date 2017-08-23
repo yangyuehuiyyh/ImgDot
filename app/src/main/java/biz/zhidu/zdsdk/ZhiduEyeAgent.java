@@ -4,9 +4,10 @@ import android.graphics.Point;
 import android.util.Log;
 import android.view.SurfaceView;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-public class ZhiduEyeAgent {
+public class ZhiduEyeAgent implements Serializable{
     public static final byte CAMERA_CONTROL_ACTION_UP = 0x00000001     /* 向上转 */;
     public static final byte CAMERA_CONTROL_ACTION_LEFT = 0x00000002   /* 向左转 */;
     public static final byte CAMERA_CONTROL_ACTION_ROTATE = 0x00000003 /*旋转*/;

@@ -9,6 +9,7 @@ import com.punuo.sys.app.imgdot.R;
 import com.punuo.sys.app.imgdot.adapter.ImgBrowsePagerAdapter;
 import com.punuo.sys.app.imgdot.adapter.VideoListAdapter;
 import com.punuo.sys.app.imgdot.bean.ImgSimple;
+import com.punuo.sys.app.imgdot.bean.Info;
 import com.punuo.sys.app.imgdot.bean.PointSimple;
 
 import java.util.ArrayList;
@@ -46,7 +47,16 @@ public class GdomainActivity extends AppCompatActivity implements ImgBrowsePager
         pointSimple0.width_scale = 0.16f;
         pointSimple0.height_scale = 0.18f;
 
+        PointSimple pointSimple1 = new PointSimple();
+        pointSimple1.width_scale = 0.16f;
+        pointSimple1.height_scale = 0.30f;
+
+        PointSimple pointSimple2 = new PointSimple();
+        pointSimple2.width_scale = 0.16f;
+        pointSimple2.height_scale = 0.42f;
         pointSimples.add(pointSimple0);
+        pointSimples.add(pointSimple1);
+        pointSimples.add(pointSimple2);
         imgSimple1.pointSimples = pointSimples;
 
         images.add(imgSimple1);
@@ -55,6 +65,13 @@ public class GdomainActivity extends AppCompatActivity implements ImgBrowsePager
     @Override
     public void onPlayListener(int tag) {
         Intent intent = new Intent(this, VideoPlayActivity.class);
+        if (tag == 0){
+            Info.eqid = "340200-340200200000100005-0001-0001";
+        } else if (tag == 1) {
+            Info.eqid = "340200-340200200000100008-0001-0001";
+        }else if (tag == 2){
+            Info.eqid = "340200-340200200000100009-0001-0001";
+        }
         startActivity(intent);
     }
 }

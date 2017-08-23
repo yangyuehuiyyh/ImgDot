@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:id="@+id/surfaceView"
         android:orientation="horizontal"/>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:layout_gravity="bottom|center_horizontal">
         <LinearLayout
@@ -51,6 +53,13 @@
                 android:layout_height="wrap_content"
                 android:text="right"
                 android:id="@+id/right"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看录像"
+                android:id="@+id/query_recordlist"
+                android:gravity="center"
+                android:layout_gravity="end"/>
 
             <!--<Button-->
                 <!--android:layout_width="wrap_content"-->
@@ -60,11 +69,5 @@
         </LinearLayout>
 
     </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="查看录像"
-        android:id="@+id/query_recordlist"
-        android:gravity="center"
-        android:layout_gravity="end"/>
-</FrameLayout>
+
+</LinearLayout>

@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.punuo.sys.app.imgdot.R;
+import com.punuo.sys.app.imgdot.bean.Info;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import biz.zhidu.zdsdk.RecordInfo;
 import biz.zhidu.zdsdk.VideoStreamsView;
@@ -38,9 +42,7 @@ public class VideoPlayActivity extends AppCompatActivity {
     Button queryRecordlist;
     private ZhiduEye eye;
 
-    private ZhiduEyeAgent eyeAgent;
-
-    private String eqid = "340200-340200200000100005-0001-0001";
+    //private String eqid = "340200-340200200000100005-0001-0001";
 
     private VideoStreamsView videoView;
 
@@ -50,10 +52,10 @@ public class VideoPlayActivity extends AppCompatActivity {
 
     private int height;
 
-    private RecordInfo[] recordList;
-
+    private String TAG = "VideoPlayActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate" );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
         ButterKnife.bind(this);
@@ -77,25 +79,33 @@ public class VideoPlayActivity extends AppCompatActivity {
 
     public void init() {
         eye = new ZhiduEye(this);
-        eyeAgent = eye.createAgent();
+        Info.eyeAgent = eye.createAgent();
 
         System.out.println("width " + width + " height " + height);
 
-        eyeAgent.startLogin("114.215.169.7", (short) 5555, "zhidu004@zhidu.biz", "12345");
+        Info.eyeAgent.startLogin("114.215.169.7", (short) 5555, "zhidu004@zhidu.biz", "12345");
 
-        eyeAgent.SetMessageCallBack(new ZhiduEyeAgent.MessageCallBack() {
+        Info.eyeAgent.SetMessageCallBack(new ZhiduEyeAgent.MessageCallBack() {
             @Override
             public void OnRecvieMessage(int msgtype, int errorcode) {
-                if (errorcode < 0){
-                    if (msgtype == 1){
-                        Toast.makeText(VideoPlayActivity.this, "视频注册失败", Toast.LENGTH_SHORT);
-                    }else if (msgtype == 3){
-                        Toast.makeText(VideoPlayActivity.this, "视频请求失败", Toast.LENGTH_SHORT);
-                    }else {
-                        Toast.makeText(VideoPlayActivity.this, "请求失败", Toast.LENGTH_SHORT);
-                    }
-                } else {
-                    eyeAgent.startMonitorChannel(videoView, eqid, (short) 2);
+                if (msgtype == 1 || msgtype == 13 || msgtype == 18 && errorcode >= 0){
+                    Log.i(TAG, "OnRecvieMessage: ");
+                    Log.e(TAG, "OnRecvieMessage: " + Info.eqid);
+                    Info.eyeAgent.startMonitorChannel(videoView, Info.eqid, (short) 2);
+                }else if (msgtype == 1 && errorcode < 0){
+                    Toast.makeText(VideoPlayActivity.this, "视频注册失败", Toast.LENGTH_SHORT);
+                }
+                if (msgtype == 3 && errorcode < 0){
+                    Log.e(TAG, "OnRecvieMessage: "+ "设备不在线" );
+                    AlertDialog dialog = new AlertDialog.Builder(VideoPlayActivity.this)
+                            .setTitle("设备不在线")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    closeVideo();
+                                }
+                            }).create();
+                    dialog.show();
                 }
             }
         });
@@ -106,20 +116,22 @@ public class VideoPlayActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.up:
-                eyeAgent.controlCamera(eqid, eyeAgent.CAMERA_CONTROL_ACTION_UP,(byte)0);
+                Info.eyeAgent.controlCamera(Info.eqid, Info.eyeAgent.CAMERA_CONTROL_ACTION_UP,(byte)0);
                 break;
             case R.id.down:
-                eyeAgent.controlCamera(eqid, eyeAgent.CAMERA_CONTROL_ACTION_DOWN, (byte)0);
+                Info.eyeAgent.controlCamera(Info.eqid, Info.eyeAgent.CAMERA_CONTROL_ACTION_DOWN, (byte)0);
                 break;
             case R.id.left:
-                eyeAgent.controlCamera(eqid, eyeAgent.CAMERA_CONTROL_ACTION_LEFT,(byte)0);
+                Info.eyeAgent.controlCamera(Info.eqid, Info.eyeAgent.CAMERA_CONTROL_ACTION_LEFT,(byte)0);
                 break;
             case R.id.right:
-                eyeAgent.controlCamera(eqid, eyeAgent.CAMERA_CONTROL_ACTION_RIGHT, (byte)0);
+                Info.eyeAgent.controlCamera(Info.eqid, Info.eyeAgent.CAMERA_CONTROL_ACTION_RIGHT, (byte)0);
                 break;
             case R.id.query_recordlist:
-                recordList = eyeAgent.queryRecordList();
-                if (recordList == null){
+                Info.eyeAgent.startQueryRecord(Info.eqid,false, getDate("2017/08/23 10:33:01"),getDate("2017/08/23 10:34:39"));
+                Info.recordList = Info.eyeAgent.queryRecordList();
+                System.out.println("----queryRecord " + Info.recordList.length);
+                if (Info.recordList == null){
                     Toast.makeText(VideoPlayActivity.this, "没有录像记录", Toast.LENGTH_SHORT);
                 }else {
                     Intent intent = new Intent(this,RecordPlayActivity.class);
@@ -151,7 +163,20 @@ public class VideoPlayActivity extends AppCompatActivity {
     }
 
     public void closeVideo(){
-        eyeAgent.stopMonitorChannel(eqid);
+        Info.eyeAgent.stopMonitorChannel(Info.eqid);
+        Info.eqid = null;
         finish();
+    }
+
+    public static long getDate(String unixDate) {
+        long unixTimestamp = 0;
+        try {
+            Date date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(unixDate);
+            unixTimestamp = date.getTime()/1000;
+            System.out.println(unixTimestamp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unixTimestamp;
     }
 }
